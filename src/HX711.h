@@ -1,7 +1,7 @@
 /**
  *
  * HX711 library for Arduino
- * https://github.com/bogde/HX711
+ * https://github.com/HamzaHajeir/ESPArtoHX711
  *
  * MIT License
  * (c) 2018 Bogdan Necula
@@ -16,7 +16,7 @@
 #include "WProgram.h"
 #endif
 
-class HX711
+class EspartoHX711
 {
 	private:
 		byte PD_SCK;	// Power Down and Serial Clock Input Pin
@@ -27,9 +27,9 @@ class HX711
 
 	public:
 
-		HX711();
+		EspartoHX711();
 
-		virtual ~HX711();
+		virtual ~EspartoHX711();
 
 		// Initialize library with data output pin, clock input pin and gain factor.
 		// Channel selection is made by passing the appropriate gain:
@@ -43,7 +43,7 @@ class HX711
 		// input PD_SCK should be low. When DOUT goes to low, it indicates data is ready for retrieval.
 		bool is_ready();
 
-		// Wait for the HX711 to become ready
+		// Wait for the HX711 to become ready	//Not needed at all for Esparto..
 		void wait_ready(unsigned long delay_ms = 0);
 		bool wait_ready_retry(int retries = 3, unsigned long delay_ms = 0);
 		bool wait_ready_timeout(unsigned long timeout = 1000, unsigned long delay_ms = 0);

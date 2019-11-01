@@ -10,7 +10,7 @@
 #include <Arduino.h>
 #include "HX711.h"
 
-// TEENSYDUINO has a port of Dean Camera's ATOMIC_BLOCK macros for AVR to ARM Cortex M3.
+// TEENSYDUINO has a port of Dean Camera's ATOMIC_BLOCK macros for AVR to ARM Cortex M3.	//Probably not useful for Esparto
 #define HAS_ATOMIC_BLOCK (defined(ARDUINO_ARCH_AVR) || defined(TEENSYDUINO))
 
 // Whether we are running on either the ESP8266 or the ESP32.
@@ -62,13 +62,13 @@ uint8_t shiftInSlow(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
 #endif
 
 
-HX711::HX711() {
+EspartoHX711::EspartoHX711() {
 }
 
-HX711::~HX711() {
+EspartoHX711::~EspartoHX711() {
 }
 
-void HX711::begin(byte dout, byte pd_sck, byte gain) {
+void EspartoHX711::begin(byte dout, byte pd_sck, byte gain) {
 	PD_SCK = pd_sck;
 	DOUT = dout;
 
@@ -78,11 +78,11 @@ void HX711::begin(byte dout, byte pd_sck, byte gain) {
 	set_gain(gain);
 }
 
-bool HX711::is_ready() {
+bool EspartoHX711::is_ready() {
 	return digitalRead(DOUT) == LOW;
 }
 
-void HX711::set_gain(byte gain) {
+void EspartoHX711::set_gain(byte gain) {
 	switch (gain) {
 		case 128:		// channel A, gain factor 128
 			GAIN = 1;
@@ -96,13 +96,10 @@ void HX711::set_gain(byte gain) {
 	}
 
 	digitalWrite(PD_SCK, LOW);
-	read();
 }
 
-long HX711::read() {
+long EspartoHX711::read() {
 
-	// Wait for the chip to become ready.
-	wait_ready();
 
 	// Define structures for reading data into.
 	unsigned long value = 0;
@@ -184,7 +181,7 @@ long HX711::read() {
 	return static_cast<long>(value);
 }
 
-void HX711::wait_ready(unsigned long delay_ms) {
+void EspartoHX711::wait_ready(unsigned long delay_ms) {
 	// Wait for the chip to become ready.
 	// This is a blocking implementation and will
 	// halt the sketch until a load cell is connected.
@@ -195,7 +192,7 @@ void HX711::wait_ready(unsigned long delay_ms) {
 	}
 }
 
-bool HX711::wait_ready_retry(int retries, unsigned long delay_ms) {
+bool EspartoHX711::wait_ready_retry(int retries, unsigned long delay_ms) {
 	// Wait for the chip to become ready by
 	// retrying for a specified amount of attempts.
 	// https://github.com/bogde/HX711/issues/76
@@ -210,7 +207,7 @@ bool HX711::wait_ready_retry(int retries, unsigned long delay_ms) {
 	return false;
 }
 
-bool HX711::wait_ready_timeout(unsigned long timeout, unsigned long delay_ms) {
+bool EspartoHX711::wait_ready_timeout(unsigned long timeout, unsigned long delay_ms) {
 	// Wait for the chip to become ready until timeout.
 	// https://github.com/bogde/HX711/pull/96
 	unsigned long millisStarted = millis();
@@ -223,7 +220,7 @@ bool HX711::wait_ready_timeout(unsigned long timeout, unsigned long delay_ms) {
 	return false;
 }
 
-long HX711::read_average(byte times) {
+long EspartoHX711::read_average(byte times) {
 	long sum = 0;
 	for (byte i = 0; i < times; i++) {
 		sum += read();
@@ -234,40 +231,43 @@ long HX711::read_average(byte times) {
 	return sum / times;
 }
 
-double HX711::get_value(byte times) {
+double EspartoHX711::get_value(byte times) {
 	return read_average(times) - OFFSET;
 }
 
-float HX711::get_units(byte times) {
+float EspartoHX711::get_units(byte times) {
 	return get_value(times) / SCALE;
 }
 
-void HX711::tare(byte times) {
+void EspartoHX711::tare(byte times) {
 	double sum = read_average(times);
 	set_offset(sum);
 }
 
-void HX711::set_scale(float scale) {
+void EspartoHX711::set_scale(float scale) {
 	SCALE = scale;
 }
 
-float HX711::get_scale() {
+float EspartoHX711::get_scale() {
 	return SCALE;
 }
 
-void HX711::set_offset(long offset) {
+void EspartoHX711::set_offset(long offset) {
 	OFFSET = offset;
 }
 
-long HX711::get_offset() {
+long EspartoHX711::get_offset() {
 	return OFFSET;
 }
 
-void HX711::power_down() {
+void EspartoHX711::power_down() {
 	digitalWrite(PD_SCK, LOW);
 	digitalWrite(PD_SCK, HIGH);
 }
 
-void HX711::power_up() {
+void EspartoHX711::power_up() {
 	digitalWrite(PD_SCK, LOW);
 }
+
+
+
