@@ -7,14 +7,10 @@
  * (c) 2018 Bogdan Necula
  *
 **/
-#ifndef HX711_h
-#define HX711_h
+#ifndef ESPARTO_HX711_H
+#define ESPARTO_HX711_H
 
-#if ARDUINO >= 100
 #include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
 
 class EspartoHX711
 {
@@ -43,11 +39,6 @@ class EspartoHX711
 		// input PD_SCK should be low. When DOUT goes to low, it indicates data is ready for retrieval.
 		bool is_ready();
 
-		// Wait for the HX711 to become ready	//Not needed at all for Esparto..
-		void wait_ready(unsigned long delay_ms = 0);
-		bool wait_ready_retry(int retries = 3, unsigned long delay_ms = 0);
-		bool wait_ready_timeout(unsigned long timeout = 1000, unsigned long delay_ms = 0);
-
 		// set the gain factor; takes effect only after a call to read()
 		// channel A can be set for a 128 or 64 gain; channel B has a fixed 32 gain
 		// depending on the parameter, the channel is also set to either A or B
@@ -55,19 +46,6 @@ class EspartoHX711
 
 		// waits for the chip to be ready and returns a reading
 		long read();
-
-		// returns an average reading; times = how many times to read
-		long read_average(byte times = 10);
-
-		// returns (read_average() - OFFSET), that is the current value without the tare weight; times = how many readings to do
-		double get_value(byte times = 1);
-
-		// returns get_value() divided by SCALE, that is the raw value divided by a value obtained via calibration
-		// times = how many readings to do
-		float get_units(byte times = 1);
-
-		// set the OFFSET value for tare weight; times = how many times to read the tare value
-		void tare(byte times = 10);
 
 		// set the SCALE value; this value is used to convert the raw data to "human readable" data (measure units)
 		void set_scale(float scale = 1.f);
@@ -88,4 +66,4 @@ class EspartoHX711
 		void power_up();
 };
 
-#endif /* HX711_h */
+#endif /* ESPARTO_HX711_H */

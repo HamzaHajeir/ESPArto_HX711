@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "ESPArto.h"
-#include "EspartoHX711.h"
+#include "ESPArtoHX711.h"
 
 #define CHECK_OFFSET		200
 #define CHECK_INTERVAL		30
@@ -32,8 +32,5 @@ void queueMeasurement();
 void ESPArtoHX711_tare();
 void ESPArtoHX711_measure();
 
-
-void prepareHX711();
-void shutHX711OFF();
 
 #endif

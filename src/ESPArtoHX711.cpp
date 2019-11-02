@@ -8,7 +8,7 @@
  *
 **/
 #include <Arduino.h>
-#include "HX711.h"
+#include "ESPArtoHX711.h"
 
 // TEENSYDUINO has a port of Dean Camera's ATOMIC_BLOCK macros for AVR to ARM Cortex M3.	//Probably not useful for Esparto
 #define HAS_ATOMIC_BLOCK (defined(ARDUINO_ARCH_AVR) || defined(TEENSYDUINO))
@@ -181,68 +181,6 @@ long EspartoHX711::read() {
 	return static_cast<long>(value);
 }
 
-void EspartoHX711::wait_ready(unsigned long delay_ms) {
-	// Wait for the chip to become ready.
-	// This is a blocking implementation and will
-	// halt the sketch until a load cell is connected.
-	while (!is_ready()) {
-		// Probably will do no harm on AVR but will feed the Watchdog Timer (WDT) on ESP.
-		// https://github.com/bogde/HX711/issues/73
-		delay(delay_ms);
-	}
-}
-
-bool EspartoHX711::wait_ready_retry(int retries, unsigned long delay_ms) {
-	// Wait for the chip to become ready by
-	// retrying for a specified amount of attempts.
-	// https://github.com/bogde/HX711/issues/76
-	int count = 0;
-	while (count < retries) {
-		if (is_ready()) {
-			return true;
-		}
-		delay(delay_ms);
-		count++;
-	}
-	return false;
-}
-
-bool EspartoHX711::wait_ready_timeout(unsigned long timeout, unsigned long delay_ms) {
-	// Wait for the chip to become ready until timeout.
-	// https://github.com/bogde/HX711/pull/96
-	unsigned long millisStarted = millis();
-	while (millis() - millisStarted < timeout) {
-		if (is_ready()) {
-			return true;
-		}
-		delay(delay_ms);
-	}
-	return false;
-}
-
-long EspartoHX711::read_average(byte times) {
-	long sum = 0;
-	for (byte i = 0; i < times; i++) {
-		sum += read();
-		// Probably will do no harm on AVR but will feed the Watchdog Timer (WDT) on ESP.
-		// https://github.com/bogde/HX711/issues/73
-		delay(0);
-	}
-	return sum / times;
-}
-
-double EspartoHX711::get_value(byte times) {
-	return read_average(times) - OFFSET;
-}
-
-float EspartoHX711::get_units(byte times) {
-	return get_value(times) / SCALE;
-}
-
-void EspartoHX711::tare(byte times) {
-	double sum = read_average(times);
-	set_offset(sum);
-}
 
 void EspartoHX711::set_scale(float scale) {
 	SCALE = scale;
@@ -263,9 +201,38 @@ long EspartoHX711::get_offset() {
 void EspartoHX711::power_down() {
 	digitalWrite(PD_SCK, LOW);
 	digitalWrite(PD_SCK, HIGH);
+
+  	delayMicroseconds(80);
+
+//These functions worked me for shared I2C bus with other standard I2C sensors.
+
+	digitalWrite(PD_SCK, LOW);
+	digitalWrite(PD_SCK, LOW);
+	
+	pinMode(DOUT,INPUT_PULLUP);
+	pinMode(PD_SCK,INPUT_PULLUP);
+	
+	delayMicroseconds(50);
+	
+	digitalWrite(DOUT, LOW);
+	pinMode(DOUT, OUTPUT);
+	delayMicroseconds(4);
+	pinMode(PD_SCK,INPUT_PULLUP);
+	delayMicroseconds(4);
+	pinMode(DOUT,INPUT_PULLUP);
+	delayMicroseconds(4);
+	
 }
 
 void EspartoHX711::power_up() {
+	pinMode(PD_SCK, OUTPUT);
+  	pinMode(DOUT, INPUT);
+
+	pinMode(PD_SCK, OUTPUT);
+	digitalWrite(PD_SCK,HIGH);
+	
+	delayMicroseconds(10);  
+
 	digitalWrite(PD_SCK, LOW);
 }
 

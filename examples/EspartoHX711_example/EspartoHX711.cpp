@@ -37,7 +37,7 @@ void ESPArtoHX711_average(){
   int times=5;
   static long sum = 0;
 
-  prepareHX711();
+  scale.power_up();
   
 
   Esparto.nTimes(times, AVERAGE_READ_INTERVAL , 
@@ -59,7 +59,7 @@ void ESPArtoHX711_average(){
     _HX711_average = sum / times;
     sum = 0;
     averageReady = true;
-    shutHX711OFF();
+    scale.power_down();
     }
   );
 }

@@ -6,7 +6,7 @@
 
 ESPARTO_CONFIG_BLOCK defaults = {
     {"blinkrate","125"}
-    };
+};
 
 ESPArto Esparto(defaults);
 
@@ -28,4 +28,6 @@ void setupHardware(){
             }
         });
     
+    });
+
 }
