@@ -12,7 +12,7 @@
 
 #include "Arduino.h"
 
-class EspartoHX711
+class ESPArtoHX711
 {
 	private:
 		byte PD_SCK;	// Power Down and Serial Clock Input Pin
@@ -23,9 +23,9 @@ class EspartoHX711
 
 	public:
 
-		EspartoHX711();
+		ESPArtoHX711();
 
-		virtual ~EspartoHX711();
+		virtual ~ESPArtoHX711();
 
 		// Initialize library with data output pin, clock input pin and gain factor.
 		// Channel selection is made by passing the appropriate gain:

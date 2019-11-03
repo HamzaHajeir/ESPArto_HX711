@@ -5,6 +5,16 @@
 #include "ESPArto.h"
 #include "ESPArtoHX711.h"
 
+// #define DEBUGGING_MODE
+#ifdef  DEBUGGING_MODE
+#define DEBUG(x)    x
+#else
+#define DEBUG(x)
+#endif
+
+#define SDA_PIN    D2
+#define SCL_PIN   D1
+
 #define CHECK_OFFSET		200
 #define CHECK_INTERVAL		30
 
@@ -23,7 +33,7 @@ extern long _HX711_average;
 extern boolean averageReady;
 
 
-void emptyFunction(){};
+void emptyFunction();
 boolean HX711_condition();
 void ESPArtoHX711_average();
 void readValues();

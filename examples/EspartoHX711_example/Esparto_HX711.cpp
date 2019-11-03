@@ -1,6 +1,6 @@
-#include "EspartoHX711.h"
+#include "Esparto_HX711.h"
 
-ESPArtoHX711 scale; 
+ESPArtoHX711 scale;
 
 ESPARTO_TIMER _HX711_Timer , _HX711_Timer_2;
 boolean tare_or_units;    //true = tare ; false = units ;
@@ -12,24 +12,22 @@ boolean averageReady;
 
 
 
-
+void emptyFunction(){}
 boolean HX711_condition(){
   static int count=0;
-  Serial.printf("count = %d\n",count);
+  DEBUG(Serial.printf("count = %d\n",count));
   if(count<=5) {
     count++;
     bool scaleReady = scale.is_ready();
-    Serial.printf("scaleReady = %d , count = %d\n",scaleReady,count);
+    DEBUG(Serial.printf("scaleReady = %d , count = %d\n",scaleReady,count));
     if(scaleReady) count = 0;
     return !scaleReady;
   }else{
-    Serial.printf("Couldn't init HX711\n");
+    DEBUG(Serial.printf("Couldn't init HX711\n"));
     count=0;
     return false;
   }
 }
-
-void emptyFunction(){}
 
 
 
@@ -44,7 +42,7 @@ void ESPArtoHX711_average(){
   [times](){
     static int count = 0;
     count++;
-    Serial.printf("nTimes : count = %d  || condition = %d\n", count , count!=times);
+    DEBUG(Serial.printf("nTimes : count = %d  || condition = %d\n", count , count!=times));
     if(count!=times){
       //Esparto.once(10 ... ) to make an offset after preparing HX711.
       Esparto.repeatWhile(HX711_condition , READ_CHECK_INTERVAL , emptyFunction , 
@@ -66,18 +64,18 @@ void ESPArtoHX711_average(){
 
 void readValues(){
   if(tare_or_units){
-    Serial.printf("Scale is tared , value = %ld \n", _HX711_average);
+    DEBUG(Serial.printf("Scale is tared , value = %ld \n", _HX711_average));
     scale.set_offset(_HX711_average);
   }else{
     weight = (_HX711_average - scale.get_offset()) / scale.get_scale();
-    Serial.printf("Weight is measured , value = %.2f \n", weight);
+    DEBUG(Serial.printf("Weight is measured , value = %.2f \n", weight));
     weightReady = true;
   }
   _HX711_average = 0;
 }
 
 void checkReadings(){
-  Serial.printf("Checking if readings are ready , averageReady=%d\n",averageReady);
+  DEBUG(Serial.printf("Checking if readings are ready , averageReady=%d\n",averageReady));
   if(averageReady){
     Esparto.queueFunction(readValues);
     averageReady = false;
@@ -89,7 +87,7 @@ void checkReadings(){
 void queueMeasurement(){
   
   if(_HX711_Ready){
-    Serial.printf("HX711 is ready! , _HX711_Ready =%d\n",_HX711_Ready);
+    DEBUG(Serial.printf("HX711 is ready! , _HX711_Ready =%d\n",_HX711_Ready));
     Esparto.queueFunction(ESPArtoHX711_average);
     _HX711_Ready = false;
     Esparto.once(CHECK_OFFSET,[](){
@@ -97,7 +95,7 @@ void queueMeasurement(){
     });
   }
   else{
-    Serial.printf("HX711 is busy! , _HX711_Ready =%d\n",_HX711_Ready);
+    DEBUG(Serial.printf("HX711 is busy! , _HX711_Ready =%d\n",_HX711_Ready));
     Esparto.once(200,queueMeasurement);
   }
 }

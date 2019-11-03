@@ -10,7 +10,7 @@
 #include <Arduino.h>
 #include "ESPArtoHX711.h"
 
-// TEENSYDUINO has a port of Dean Camera's ATOMIC_BLOCK macros for AVR to ARM Cortex M3.	//Probably not useful for Esparto
+// TEENSYDUINO has a port of Dean Camera's ATOMIC_BLOCK macros for AVR to ARM Cortex M3.	//Probably not useful for ESPArto
 #define HAS_ATOMIC_BLOCK (defined(ARDUINO_ARCH_AVR) || defined(TEENSYDUINO))
 
 // Whether we are running on either the ESP8266 or the ESP32.
@@ -62,13 +62,13 @@ uint8_t shiftInSlow(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder) {
 #endif
 
 
-EspartoHX711::EspartoHX711() {
+ESPArtoHX711::ESPArtoHX711() {
 }
 
-EspartoHX711::~EspartoHX711() {
+ESPArtoHX711::~ESPArtoHX711() {
 }
 
-void EspartoHX711::begin(byte dout, byte pd_sck, byte gain) {
+void ESPArtoHX711::begin(byte dout, byte pd_sck, byte gain) {
 	PD_SCK = pd_sck;
 	DOUT = dout;
 
@@ -78,11 +78,11 @@ void EspartoHX711::begin(byte dout, byte pd_sck, byte gain) {
 	set_gain(gain);
 }
 
-bool EspartoHX711::is_ready() {
+bool ESPArtoHX711::is_ready() {
 	return digitalRead(DOUT) == LOW;
 }
 
-void EspartoHX711::set_gain(byte gain) {
+void ESPArtoHX711::set_gain(byte gain) {
 	switch (gain) {
 		case 128:		// channel A, gain factor 128
 			GAIN = 1;
@@ -98,7 +98,7 @@ void EspartoHX711::set_gain(byte gain) {
 	digitalWrite(PD_SCK, LOW);
 }
 
-long EspartoHX711::read() {
+long ESPArtoHX711::read() {
 
 
 	// Define structures for reading data into.
@@ -182,23 +182,23 @@ long EspartoHX711::read() {
 }
 
 
-void EspartoHX711::set_scale(float scale) {
+void ESPArtoHX711::set_scale(float scale) {
 	SCALE = scale;
 }
 
-float EspartoHX711::get_scale() {
+float ESPArtoHX711::get_scale() {
 	return SCALE;
 }
 
-void EspartoHX711::set_offset(long offset) {
+void ESPArtoHX711::set_offset(long offset) {
 	OFFSET = offset;
 }
 
-long EspartoHX711::get_offset() {
+long ESPArtoHX711::get_offset() {
 	return OFFSET;
 }
 
-void EspartoHX711::power_down() {
+void ESPArtoHX711::power_down() {
 	digitalWrite(PD_SCK, LOW);
 	digitalWrite(PD_SCK, HIGH);
 
@@ -224,7 +224,7 @@ void EspartoHX711::power_down() {
 	
 }
 
-void EspartoHX711::power_up() {
+void ESPArtoHX711::power_up() {
 	pinMode(PD_SCK, OUTPUT);
   	pinMode(DOUT, INPUT);
 
