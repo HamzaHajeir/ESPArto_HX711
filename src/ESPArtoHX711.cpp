@@ -75,6 +75,11 @@ void ESPArtoHX711::begin(byte dout, byte pd_sck, byte gain) {
 	pinMode(PD_SCK, OUTPUT);
 	pinMode(DOUT, INPUT);
 
+	digitalWrite(PD_SCK,HIGH);
+	
+	delayMicroseconds(10);  
+
+	digitalWrite(PD_SCK, LOW);
 	set_gain(gain);
 }
 
@@ -200,35 +205,34 @@ long ESPArtoHX711::get_offset() {
 
 void ESPArtoHX711::power_down() {
 	digitalWrite(PD_SCK, LOW);
+	delayMicroseconds(1);
 	digitalWrite(PD_SCK, HIGH);
 
   	delayMicroseconds(80);
 
 //These functions worked me for shared I2C bus with other standard I2C sensors.
 
-	digitalWrite(PD_SCK, LOW);
+	// digitalWrite(PD_SCK, LOW);
 	digitalWrite(PD_SCK, LOW);
 	
 	pinMode(DOUT,INPUT_PULLUP);
 	pinMode(PD_SCK,INPUT_PULLUP);
 	
-	delayMicroseconds(50);
-	
-	digitalWrite(DOUT, LOW);
-	pinMode(DOUT, OUTPUT);
-	delayMicroseconds(4);
-	pinMode(PD_SCK,INPUT_PULLUP);
-	delayMicroseconds(4);
-	pinMode(DOUT,INPUT_PULLUP);
-	delayMicroseconds(4);
+	// digitalWrite(DOUT, LOW);
+	// pinMode(DOUT, OUTPUT);
+	// delayMicroseconds(4);
+	// pinMode(PD_SCK,INPUT_PULLUP);
+	// delayMicroseconds(4);
+	// pinMode(DOUT,INPUT_PULLUP);
+	// delayMicroseconds(4);
 	
 }
 
 void ESPArtoHX711::power_up() {
 	pinMode(PD_SCK, OUTPUT);
-  	pinMode(DOUT, INPUT);
+	pinMode(DOUT, INPUT);
 
-	pinMode(PD_SCK, OUTPUT);
+	// pinMode(PD_SCK, OUTPUT);
 	digitalWrite(PD_SCK,HIGH);
 	
 	delayMicroseconds(10);  
